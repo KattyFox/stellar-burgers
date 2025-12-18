@@ -8,8 +8,8 @@ export const BurgerConstructor: FC = () => {
     bun: {
       on: false,
       price: 0,
-      name: `Хачипури`,
-      image: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROHxYft1f_Ln_y_scKnh8-g5rLMmce7JKyPQ&s`
+      name: ``,
+      image: ``
     },
     ingredients: []
   };
