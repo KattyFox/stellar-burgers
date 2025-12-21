@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getIngredientsApi } from '@api'; // берем готовый запрос из вашего файла
+import { getIngredientsApi } from '@api'; // Импортируем готовую функцию запроса
 import { TIngredient } from '@utils-types';
 
-// 1. Создаем Thunk — это асинхронный "экшен" для запроса к API
+// 1. Создаем "Thunk" (санка). Это асинхронный экшен.
+// Он сам сделает запрос к серверу и передаст результат в редюсер.
 export const fetchIngredients = createAsyncThunk(
-  'ingredients/fetchIngredients',
+  'ingredients/getAll', // Имя экшена (произвольное)
   async () => {
     const data = await getIngredientsApi();
-    return data;
+    return data; // Это вернется в action.payload
   }
 );
 
@@ -26,17 +27,20 @@ const initialState: IIngredientsState = {
 const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
-  reducers: {}, // Обычные редюсеры (пока пусто)
+  reducers: {}, // Здесь могли бы быть обычные функции (например, очистка)
   extraReducers: (builder) => {
     builder
+      // Когда запрос улетел, но ответа еще нет
       .addCase(fetchIngredients.pending, (state) => {
-        state.loading = true; // Началась загрузка — включаем лоадер
+        state.loading = true;
         state.error = null;
       })
+      // Когда данные успешно пришли
       .addCase(fetchIngredients.fulfilled, (state, action) => {
-        state.loading = false; // Загрузка окончена
-        state.ingredients = action.payload; // Сохраняем данные
+        state.loading = false;
+        state.ingredients = action.payload;
       })
+      // Если сервер ответил ошибкой
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Ошибка загрузки';
@@ -44,4 +48,4 @@ const ingredientsSlice = createSlice({
   }
 });
 
-export default ingredientsSlice;
+export default ingredientsSlice.reducer;

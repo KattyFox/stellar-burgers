@@ -8,7 +8,7 @@ import {
 } from 'react-redux';
 
 const rootReducer = combineReducers({
-  ingredients: ingredientsSlice.reducer
+  ingredients: ingredientsSlice
   // Здесь можно добавлять другие редюсеры в будущем
 });
 
