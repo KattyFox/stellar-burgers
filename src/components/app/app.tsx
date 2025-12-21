@@ -16,13 +16,23 @@ import { AppHeader } from '@components';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { FC } from 'react';
 import { ROUTES } from '../../routes/routes'; // Импортируем наши пути
+import { useEffect } from 'react';
+import { useDispatch } from '../../services/store'; // наш кастомный хук
+import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 
 const App: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Добавили dispatch
   // background — это сохраненное состояние "предыдущей страницы"
   // Если оно есть, значит мы открыли модалку поверх основной страницы
   const background = location.state?.background;
+
+  // Добавили useEffect для загрузки ингредиентов при монтировании
+  useEffect(() => {
+    // Как только приложение загрузилось, идем за ингредиентами
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   const handleModalClose = () => {
     // Возвращаемся на один шаг назад в истории браузера
