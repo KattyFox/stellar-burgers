@@ -1,25 +1,29 @@
+// src/pages/profile/profile.tsx
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from '../../services/store';
+import { updateUserApi } from '@api';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.data);
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: '',
+    email: '',
     password: ''
   });
 
+  const [updateUserError, setUpdateUserError] = useState<string | undefined>();
+
   useEffect(() => {
-    setFormValue((prevState) => ({
-      ...prevState,
-      name: user?.name || '',
-      email: user?.email || ''
-    }));
+    if (user) {
+      setFormValue({
+        name: user.name,
+        email: user.email,
+        password: ''
+      });
+    }
   }, [user]);
 
   const isFormChanged =
@@ -27,15 +31,30 @@ export const Profile: FC = () => {
     formValue.email !== user?.email ||
     !!formValue.password;
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    setUpdateUserError(undefined);
+
+    try {
+      const updateData: { name?: string; email?: string; password?: string } =
+        {};
+      if (formValue.name !== user?.name) updateData.name = formValue.name;
+      if (formValue.email !== user?.email) updateData.email = formValue.email;
+      if (formValue.password) updateData.password = formValue.password;
+
+      await updateUserApi(updateData);
+      // После успешного обновления можно обновить данные пользователя в store
+      // dispatch(updateUser(formValue)); // Нужно добавить action в userSlice
+    } catch (error: any) {
+      setUpdateUserError(error.message);
+    }
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
     setFormValue({
-      name: user.name,
-      email: user.email,
+      name: user?.name || '',
+      email: user?.email || '',
       password: ''
     });
   };
@@ -51,11 +70,10 @@ export const Profile: FC = () => {
     <ProfileUI
       formValue={formValue}
       isFormChanged={isFormChanged}
+      updateUserError={updateUserError}
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };

@@ -3,6 +3,8 @@ import ingredientsSlice from './slices/ingredientsSlice';
 import constructorSlice from './slices/constructorSlice';
 import userSlice from './slices/userSlice';
 import orderSlice from './slices/orderSlice';
+import feedSlice from './slices/feedSlice'; // Добавьте этот импорт
+import userOrdersSlice from './slices/userOrdersSlice'; // Добавьте этот импорт
 
 import {
   TypedUseSelectorHook,
@@ -11,11 +13,12 @@ import {
 } from 'react-redux';
 
 const rootReducer = combineReducers({
-  // Здесь была ошибка! Обязательно добавьте .reducer
   [ingredientsSlice.name]: ingredientsSlice.reducer,
   [constructorSlice.name]: constructorSlice.reducer,
   [userSlice.name]: userSlice.reducer,
-  [orderSlice.name]: orderSlice.reducer
+  [orderSlice.name]: orderSlice.reducer,
+  [feedSlice.name]: feedSlice.reducer,
+  [userOrdersSlice.name]: userOrdersSlice.reducer
 });
 
 const store = configureStore({
