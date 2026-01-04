@@ -3,8 +3,8 @@ import ingredientsSlice from './slices/ingredientsSlice';
 import constructorSlice from './slices/constructorSlice';
 import userSlice from './slices/userSlice';
 import orderSlice from './slices/orderSlice';
-import feedSlice from './slices/feedSlice'; // Добавьте этот импорт
-import userOrdersSlice from './slices/userOrdersSlice'; // Добавьте этот импорт
+import feedSlice from './slices/feedSlice';
+import userOrdersSlice from './slices/userOrdersSlice';
 
 import {
   TypedUseSelectorHook,
