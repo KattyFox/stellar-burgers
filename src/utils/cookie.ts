@@ -1,8 +1,8 @@
+// В cookie.ts
 export function getCookie(name: string): string | undefined {
   const matches = document.cookie.match(
     new RegExp(
       '(?:^|; )' +
-        // eslint-disable-next-line no-useless-escape
         name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') +
         '=([^;]*)'
     )
@@ -17,7 +17,10 @@ export function setCookie(
 ) {
   props = {
     path: '/',
-    ...props
+    ...props,
+    // Добавьте для безопасности
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production'
   };
 
   let exp = props.expires;
@@ -30,8 +33,10 @@ export function setCookie(
   if (exp && exp instanceof Date) {
     props.expires = exp.toUTCString();
   }
+
   value = encodeURIComponent(value);
   let updatedCookie = name + '=' + value;
+
   for (const propName in props) {
     updatedCookie += '; ' + propName;
     const propValue = props[propName];
@@ -39,9 +44,6 @@ export function setCookie(
       updatedCookie += '=' + propValue;
     }
   }
-  document.cookie = updatedCookie;
-}
 
-export function deleteCookie(name: string) {
-  setCookie(name, '', { expires: -1 });
+  document.cookie = updatedCookie;
 }

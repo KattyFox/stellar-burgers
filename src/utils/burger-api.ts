@@ -39,16 +39,30 @@ export const fetchWithRefresh = async <T>(
   url: RequestInfo,
   options: RequestInit
 ) => {
+  // Добавляем токен в заголовки, если он есть
+  const accessToken = getCookie('accessToken');
+  if (accessToken) {
+    options.headers = {
+      ...options.headers,
+      Authorization: accessToken
+    } as HeadersInit;
+  }
+
   try {
     const res = await fetch(url, options);
     return await checkResponse<T>(res);
   } catch (err) {
-    if ((err as { message: string }).message === 'jwt expired') {
+    if (
+      (err as { message: string }).message === 'jwt expired' ||
+      (err as { message: string }).message === 'invalid token'
+    ) {
       const refreshData = await refreshToken();
-      if (options.headers) {
-        (options.headers as { [key: string]: string }).authorization =
-          refreshData.accessToken;
-      }
+      // Обновляем заголовки с новым токеном
+      options.headers = {
+        ...options.headers,
+        Authorization: refreshData.accessToken
+      } as HeadersInit;
+
       const res = await fetch(url, options);
       return await checkResponse<T>(res);
     } else {
@@ -217,10 +231,12 @@ export const updateUserApi = (user: Partial<TRegisterData>) =>
   fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
     method: 'PATCH',
     headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-      authorization: getCookie('accessToken')
+      'Content-Type': 'application/json;charset=utf-8'
     } as HeadersInit,
     body: JSON.stringify(user)
+  }).then((data) => {
+    if (data?.success) return data;
+    return Promise.reject(data);
   });
 
 export const logoutApi = () =>
