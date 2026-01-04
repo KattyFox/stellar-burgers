@@ -1,19 +1,16 @@
-// src/pages/profile/profile.tsx
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
-import { updateUserApi } from '@api';
+import { updateUser } from '../../services/slices/userSlice';
 
 export const Profile: FC = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.data);
-
   const [formValue, setFormValue] = useState({
     name: '',
     email: '',
     password: ''
   });
-
   const [updateUserError, setUpdateUserError] = useState<string | undefined>();
 
   useEffect(() => {
@@ -42,9 +39,7 @@ export const Profile: FC = () => {
       if (formValue.email !== user?.email) updateData.email = formValue.email;
       if (formValue.password) updateData.password = formValue.password;
 
-      await updateUserApi(updateData);
-      // После успешного обновления можно обновить данные пользователя в store
-      // dispatch(updateUser(formValue)); // Нужно добавить action в userSlice
+      await dispatch(updateUser(updateData)).unwrap();
     } catch (error: any) {
       setUpdateUserError(error.message);
     }
