@@ -1,28 +1,38 @@
 import { FC, useMemo } from 'react';
+import { useParams } from 'react-router-dom'; // Добавить
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { useSelector } from '../../services/store'; // Добавить
+import { getOrderByNumberApi } from '@api'; // Добавить если нужно
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  const { number } = useParams<{ number: string }>(); // Получаем номер заказа
 
-  const ingredients: TIngredient[] = [];
+  // Получаем данные из стора
+  // TODO: Нужно реализовать получение конкретного заказа
+  // Пока используем заглушку или получаем из feed/userOrders
 
-  /* Готовим данные для отображения */
+  const ingredients: TIngredient[] = useSelector(
+    (state) => state.ingredients.ingredients
+  );
+  const { orders: feedOrders } = useSelector((state) => state.feed);
+  const { orders: userOrders } = useSelector((state) => state.userOrders);
+
+  // Ищем заказ во всех источниках
+  const allOrders = [...feedOrders, ...userOrders];
+  const orderData = allOrders.find(
+    (order) => order.number.toString() === number
+  );
+
+  if (!orderData) {
+    return <Preloader />;
+  }
+
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 
     const date = new Date(orderData.createdAt);
-
     type TIngredientsWithCount = {
       [key: string]: TIngredient & { count: number };
     };
@@ -40,7 +50,6 @@ export const OrderInfo: FC = () => {
         } else {
           acc[item].count++;
         }
-
         return acc;
       },
       {}
