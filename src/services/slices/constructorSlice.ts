@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TIngredient, TConstructorIngredient } from '@utils-types';
-import { v4 as uuidv4 } from 'uuid'; // Нужно установить: npm i uuid
+import { v4 as uuidv4 } from 'uuid';
 
 interface IConstructorState {
   bun: TIngredient | null;
@@ -13,7 +13,7 @@ const initialState: IConstructorState = {
 };
 
 const constructorSlice = createSlice({
-  name: 'burgerConstructor', // Это имя будет ключом в сторе
+  name: 'burgerConstructor',
   initialState,
   reducers: {
     // Добавление ингредиента
@@ -25,17 +25,28 @@ const constructorSlice = createSlice({
           state.ingredients.push(action.payload);
         }
       },
-      // Подготовка данных: добавляем уникальный id каждому ингредиенту
       prepare: (ingredient: TIngredient) => ({
         payload: { ...ingredient, id: uuidv4() }
       })
     },
+
     // Удаление ингредиента
     removeIngredient: (state, action: PayloadAction<string>) => {
       state.ingredients = state.ingredients.filter(
         (item) => item.id !== action.payload
       );
     },
+
+    // Перемещение ингредиента
+    moveIngredient: (
+      state,
+      action: PayloadAction<{ from: number; to: number }>
+    ) => {
+      const { from, to } = action.payload;
+      const [movedItem] = state.ingredients.splice(from, 1);
+      state.ingredients.splice(to, 0, movedItem);
+    },
+
     // Очистка конструктора (после заказа)
     clearConstructor: (state) => {
       state.bun = null;
@@ -44,6 +55,12 @@ const constructorSlice = createSlice({
   }
 });
 
-export const { addIngredient, removeIngredient, clearConstructor } =
-  constructorSlice.actions;
+// Экспортируем все actions
+export const {
+  addIngredient,
+  removeIngredient,
+  moveIngredient,
+  clearConstructor
+} = constructorSlice.actions;
+
 export default constructorSlice;
