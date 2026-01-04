@@ -21,6 +21,7 @@ import { useDispatch } from '../../services/store';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 import { AppHeader } from '@components';
 import styles from './app.module.css';
+import { checkUserAuth } from '../../services/slices/userSlice';
 
 const App: FC = () => {
   const location = useLocation();
@@ -29,7 +30,10 @@ const App: FC = () => {
   const background = location.state?.background;
 
   useEffect(() => {
+    // Загружаем ингредиенты
     dispatch(fetchIngredients());
+    // Проверяем авторизацию при загрузке приложения
+    dispatch(checkUserAuth());
   }, [dispatch]);
 
   const handleModalClose = () => navigate(-1);
