@@ -51,6 +51,14 @@ const constructorSlice = createSlice({
     clearConstructor: (state) => {
       state.bun = null;
       state.ingredients = [];
+    },
+
+    // Обновить (для правильного порядка)
+    updateIngredients: (
+      state,
+      action: PayloadAction<TConstructorIngredient[]>
+    ) => {
+      state.ingredients = action.payload;
     }
   }
 });

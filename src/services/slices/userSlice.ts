@@ -9,6 +9,7 @@ import {
   resetPasswordApi
 } from '@api';
 import { TUser } from '@utils-types';
+import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
 
 // Локально определяем типы, так как они не экспортируются из types.ts
 type TRegisterData = {
@@ -28,6 +29,7 @@ export const registerUser = createAsyncThunk(
   async (data: TRegisterData) => {
     const res = await registerUserApi(data);
     localStorage.setItem('refreshToken', res.refreshToken);
+    setCookie('accessToken', res.accessToken);
     return res.user;
   }
 );
@@ -35,10 +37,15 @@ export const registerUser = createAsyncThunk(
 // 2. Вход
 export const loginUser = createAsyncThunk(
   'user/login',
-  async (data: TLoginData) => {
-    const res = await loginUserApi(data);
-    localStorage.setItem('refreshToken', res.refreshToken);
-    return res.user;
+  async (data: TLoginData, { rejectWithValue }) => {
+    try {
+      const res = await loginUserApi(data);
+      localStorage.setItem('refreshToken', res.refreshToken);
+      setCookie('accessToken', res.accessToken);
+      return res.user;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Login failed');
+    }
   }
 );
 
@@ -73,11 +80,27 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-// 7. Проверка авторизации при загрузке
-export const checkUserAuth = createAsyncThunk('user/checkAuth', async () => {
-  const res = await getUserApi();
-  return res.user;
-});
+// 7. Проверка авторизации при загрузке (ИСПОЛЬЗУЕМ getCookie)
+export const checkUserAuth = createAsyncThunk(
+  'user/checkAuth',
+  async (_, { rejectWithValue }) => {
+    // getCookie
+    const refreshToken = localStorage.getItem('refreshToken');
+    const accessToken = getCookie('accessToken');
+
+    // Если нет токенов - сразу завершаем
+    if (!refreshToken || !accessToken) {
+      return rejectWithValue('No tokens found');
+    }
+
+    try {
+      const res = await getUserApi();
+      return res.user;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Auth check failed');
+    }
+  }
+);
 
 interface IUserState {
   data: TUser | null;

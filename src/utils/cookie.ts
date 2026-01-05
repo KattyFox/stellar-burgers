@@ -47,3 +47,12 @@ export function setCookie(
 
   document.cookie = updatedCookie;
 }
+
+export function deleteCookie(name: string) {
+  setCookie(name, '', {
+    expires: -1,
+    path: '/',
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production'
+  });
+}
