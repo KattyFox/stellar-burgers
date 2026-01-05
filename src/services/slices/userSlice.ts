@@ -53,6 +53,7 @@ export const loginUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk('user/logout', async () => {
   await logoutApi();
   localStorage.removeItem('refreshToken');
+  deleteCookie('accessToken');
 });
 
 // 4. Восстановление пароля
