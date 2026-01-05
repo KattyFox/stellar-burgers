@@ -4,8 +4,24 @@ import { TIngredient, TOrder, TOrdersData, TUser } from './types';
 const URL =
   process.env.BURGER_API_URL || 'https://norma.nomoreparties.space/api';
 
-const checkResponse = <T>(res: Response): Promise<T> =>
-  res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
+const checkResponse = <T>(res: Response): Promise<T> => {
+  if (!res.ok) {
+    // Сначала читаем как текст
+    return res.text().then((text) => {
+      try {
+        // Пытаемся распарсить как JSON
+        const jsonError = JSON.parse(text);
+        return Promise.reject(jsonError);
+      } catch {
+        // Если не JSON - возвращаем текст ошибки
+        return Promise.reject(new Error(`HTTP ${res.status}: ${text}`));
+      }
+    });
+  }
+
+  // Если статус OK - парсим JSON
+  return res.json();
+};
 
 type TServerResponse<T> = {
   success: boolean;
@@ -71,7 +87,10 @@ export const fetchWithRefresh = async <T>(
       error.message === 'jwt expired' ||
       error.message === 'invalid token' ||
       error.message === 'Token is invalid' ||
-      (error.message && error.message.includes('jwt'))
+      error.message === 'Unauthorized' ||
+      error.message === 'Access token expired' ||
+      (error.message && error.message.includes('jwt')) ||
+      (error.message && error.message.includes('token'))
     ) {
       try {
         const refreshData = await refreshToken();
