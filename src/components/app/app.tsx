@@ -22,11 +22,17 @@ import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 import { AppHeader } from '@components';
 import styles from './app.module.css';
 import { checkUserAuth } from '../../services/slices/userSlice';
+import { useSelector } from '../../services/store';
+import { Preloader } from '@ui';
 
 const App: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // Получаем состояние проверки авторизации
+  const { isAuthChecked } = useSelector((state) => state.user);
+
   const background = location.state?.background;
 
   useEffect(() => {

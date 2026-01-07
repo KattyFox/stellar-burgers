@@ -2,7 +2,7 @@ import { setCookie, getCookie } from './cookie';
 import { TIngredient, TOrder, TOrdersData, TUser } from './types';
 
 const URL =
-  process.env.BURGER_API_URL || 'https://norma.nomoreparties.space/api';
+  process.env.BURGER_API_URL || 'https://norma.education-services.ru/api';
 
 const checkResponse = <T>(res: Response): Promise<T> => {
   if (!res.ok) {
@@ -73,7 +73,7 @@ export const fetchWithRefresh = async <T>(
   if (accessToken) {
     requestOptions.headers = {
       ...requestOptions.headers,
-      Authorization: `Bearer ${accessToken}`
+      authorization: `Bearer ${accessToken}`
     } as HeadersInit;
   }
 
@@ -100,7 +100,7 @@ export const fetchWithRefresh = async <T>(
           ...requestOptions,
           headers: {
             ...requestOptions.headers,
-            Authorization: `Bearer ${refreshData.accessToken}`
+            authorization: `Bearer ${refreshData.accessToken}`
           } as HeadersInit
         };
 

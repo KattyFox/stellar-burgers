@@ -12,7 +12,7 @@ export const ProtectedRoute = ({
   onlyUnAuth = false,
   children
 }: ProtectedRouteProps) => {
-  // Проверяем данные пользователя в сторе (убедись, что в userSlice есть эти поля)
+  // Проверяем данные пользователя в сторе
   const isAuthChecked = useSelector((state) => state.user.isAuthChecked);
   const user = useSelector((state) => state.user.data);
   const location = useLocation();
@@ -28,9 +28,10 @@ export const ProtectedRoute = ({
     return <Navigate to={from} />;
   }
 
-  // Если это роут для своих (Profile), а юзера нет — отправляем на логин
+  // Если роут только для авторизованных, а пользователь не авторизован
   if (!onlyUnAuth && !user) {
-    return <Navigate to='/login' state={{ from: location }} />;
+    // Сохраняем текущий путь для возврата после авторизации
+    return <Navigate to='/login' state={{ from: location }} replace />;
   }
 
   return children;

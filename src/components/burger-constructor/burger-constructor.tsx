@@ -40,7 +40,7 @@ export const BurgerConstructor: FC = () => {
     dispatch(orderBurger(dataToOrder));
   };
 
-  //Обработчик закрытия модального окна заказа
+  //Обработчик закрытия модалки заказа
   const closeOrderModal = () => {
     dispatch(clearOrder()); // Очищаем данные заказа
     dispatch(clearConstructor()); // Очищаем конструктор бургера
