@@ -11,7 +11,7 @@ import {
 import { TUser } from '@utils-types';
 import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
 
-// Локально определяем типы, так как они не экспортируются из types.ts
+// Локально определяем типы, без экспорта из types.ts
 type TRegisterData = {
   email: string;
   name: string;

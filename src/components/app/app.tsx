@@ -30,7 +30,7 @@ const App: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Получаем состояние проверки авторизации
+  // Состояние проверки авторизации
   const { isAuthChecked } = useSelector((state) => state.user);
 
   const background = location.state?.background;
@@ -101,7 +101,7 @@ const App: FC = () => {
             </ProtectedRoute>
           }
         />
-        {/* Отдельные страницы (если зашли по прямой ссылке) */}
+        {/* Любая из траниц (зашли по прямой ссылке) */}
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='/feed/:number' element={<OrderInfo />} />
         <Route

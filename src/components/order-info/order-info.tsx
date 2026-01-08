@@ -1,18 +1,14 @@
 import { FC, useMemo } from 'react';
-import { useParams } from 'react-router-dom'; // Добавить
+import { useParams } from 'react-router-dom';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { useSelector } from '../../services/store'; // Добавить
-import { getOrderByNumberApi } from '@api'; // Добавить если нужно
+import { useSelector } from '../../services/store';
 
 export const OrderInfo: FC = () => {
-  const { number } = useParams<{ number: string }>(); // Получаем номер заказа
+  const { number } = useParams<{ number: string }>(); // Номер заказа
 
-  // Получаем данные из стора
-  // TODO: Нужно реализовать получение конкретного заказа
-  // Пока используем заглушку или получаем из feed/userOrders
-
+  // Данные из стора
   const ingredients: TIngredient[] = useSelector(
     (state) => state.ingredients.ingredients
   );

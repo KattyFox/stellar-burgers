@@ -10,7 +10,6 @@ import { FC } from 'react';
 import { getIngredientsLoadingSelector } from '../../services/slices/ingredientsSlice';
 
 export const ConstructorPage: FC = () => {
-  // Заменяем "false" на получение реального статуса загрузки из стора
   const isIngredientsLoading = useSelector(getIngredientsLoadingSelector);
 
   return (

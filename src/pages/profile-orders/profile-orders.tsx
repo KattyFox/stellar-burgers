@@ -1,4 +1,3 @@
-// src/pages/profile-orders/profile-orders.tsx
 import { ProfileOrdersUI } from '@ui-pages';
 import { FC, useEffect } from 'react';
 import { useSelector, useDispatch } from '../../services/store';

@@ -16,7 +16,6 @@ const constructorSlice = createSlice({
   name: 'burgerConstructor',
   initialState,
   reducers: {
-    // Добавление ингредиента
     addIngredient: {
       reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
         if (action.payload.type === 'bun') {
@@ -30,14 +29,12 @@ const constructorSlice = createSlice({
       })
     },
 
-    // Удаление ингредиента
     removeIngredient: (state, action: PayloadAction<string>) => {
       state.ingredients = state.ingredients.filter(
         (item) => item.id !== action.payload
       );
     },
 
-    // Перемещение ингредиента
     moveIngredient: (
       state,
       action: PayloadAction<{ from: number; to: number }>
@@ -47,13 +44,11 @@ const constructorSlice = createSlice({
       state.ingredients.splice(to, 0, movedItem);
     },
 
-    // Очистка конструктора (после заказа)
     clearConstructor: (state) => {
       state.bun = null;
       state.ingredients = [];
     },
 
-    // Обновить (для правильного порядка)
     updateIngredients: (
       state,
       action: PayloadAction<TConstructorIngredient[]>

@@ -1,4 +1,3 @@
-// src/pages/feed/feed.tsx
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
 import { FC, useEffect } from 'react';

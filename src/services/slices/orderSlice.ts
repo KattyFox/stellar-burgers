@@ -27,7 +27,6 @@ const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    // Метод для очистки заказа (вызывается при закрытии модалки)
     clearOrder: (state) => {
       state.orderData = null;
       state.orderRequest = false;
@@ -36,15 +35,15 @@ const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(orderBurger.pending, (state) => {
-        state.orderRequest = true; // Начали запрос — включаем лоадер
+        state.orderRequest = true;
         state.error = null;
       })
       .addCase(orderBurger.fulfilled, (state, action) => {
-        state.orderRequest = false; // Запрос выполнен
-        state.orderData = action.payload.order; // Сохраняем данные заказа
+        state.orderRequest = false;
+        state.orderData = action.payload.order;
       })
       .addCase(orderBurger.rejected, (state, action) => {
-        state.orderRequest = false; // Запрос упал
+        state.orderRequest = false; // Вставай Наташа, мы все уронили!
         state.error = action.error.message || 'Ошибка при оформлении заказа';
       });
   }

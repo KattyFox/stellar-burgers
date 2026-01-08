@@ -1,4 +1,3 @@
-// В cookie.ts
 export function getCookie(name: string): string | undefined {
   const matches = document.cookie.match(
     new RegExp(
@@ -18,7 +17,7 @@ export function setCookie(
   props = {
     path: '/',
     ...props,
-    // Добавьте для безопасности
+    // Для безопасности
     sameSite: 'strict',
     secure: process.env.NODE_ENV === 'production'
   };

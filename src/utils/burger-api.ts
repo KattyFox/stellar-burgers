@@ -1,4 +1,4 @@
-import { setCookie, getCookie } from './cookie';
+//import { setCookie, getCookie } from './cookie';
 import { TIngredient, TOrder, TOrdersData, TUser } from './types';
 
 const URL =
@@ -6,20 +6,16 @@ const URL =
 
 const checkResponse = <T>(res: Response): Promise<T> => {
   if (!res.ok) {
-    // Сначала читаем как текст
     return res.text().then((text) => {
       try {
-        // Пытаемся распарсить как JSON
         const jsonError = JSON.parse(text);
         return Promise.reject(jsonError);
       } catch {
-        // Если не JSON - возвращаем текст ошибки
         return Promise.reject(new Error(`HTTP ${res.status}: ${text}`));
       }
     });
   }
 
-  // Если статус OK - парсим JSON
   return res.json();
 };
 
@@ -74,96 +70,19 @@ export const fetchWithRefresh = async <T>(
     if (accessToken) {
       requestOptions.headers = {
         ...requestOptions.headers,
-        // authorization: `Bearer ${accessToken}`
         authorization: `${accessToken}`
       } as HeadersInit;
     }
-    // const res = await fetch(url, options);
     const res = await fetch(url, requestOptions);
     return await checkResponse<T>(res);
   } catch (err) {
     if ((err as { message: string }).message === 'jwt expired') {
-      // const refreshData = await refreshToken();
-      // console.log('fetchWithRefresh accessToken ' + refreshData.accessToken);
-      // if (options.headers) {
-      //   (options.headers as { [key: string]: string }).authorization =
-      //     refreshData.accessToken;
-      // }
-      // const res = await fetch(url, options);
-      // return await checkResponse<T>(res);
-      // todo
       return Promise.reject('todo');
     } else {
       return Promise.reject(err);
     }
   }
 };
-
-// export const fetchWithRefresh = async <T>(
-//   url: RequestInfo,
-//   options: RequestInit
-// ): Promise<T> => {
-//   // Получаем access токен
-//   // const accessToken = getCookie('accessToken');
-//   const accessToken = localStorage.getItem('accessToken');
-//   console.log('fetchWithRefresh get accessToken ' + accessToken);
-
-//   // Создаем копию options, чтобы не мутировать оригинал
-//   const requestOptions = { ...options };
-
-//   // Добавляем токен в заголовки, если он есть
-//   if (accessToken) {
-//     requestOptions.headers = {
-//       ...requestOptions.headers,
-//       authorization: `Bearer ${accessToken}`
-//     } as HeadersInit;
-//   }
-
-//   try {
-//     const res = await fetch(url, requestOptions);
-//     return await checkResponse<T>(res);
-//   } catch (err) {
-//     const error = err as { message: string };
-
-//     if (
-//       error.message === 'jwt expired' ||
-//       error.message === 'invalid token' ||
-//       error.message === 'Token is invalid' ||
-//       error.message === 'Unauthorized' ||
-//       error.message === 'Access token expired' ||
-//       (error.message && error.message.includes('jwt')) ||
-//       (error.message && error.message.includes('token'))
-//     ) {
-//       try {
-//         const refreshData = await refreshToken();
-
-//         // Обновляем заголовки с новым токеном
-//         const updatedOptions = {
-//           ...requestOptions,
-//           headers: {
-//             ...requestOptions.headers,
-//             authorization: `Bearer ${refreshData.accessToken}`
-//           } as HeadersInit
-//         };
-
-//         const res = await fetch(url, updatedOptions);
-//         return await checkResponse<T>(res);
-//       } catch (refreshError) {
-//         // Если не удалось обновить токен - очищаем данные авторизации
-//         localStorage.removeItem('refreshToken');
-//         console.log('fetchWithRefresh removeItem refreshToken');
-
-//         // setCookie('accessToken', '', { expires: -1 });
-//         localStorage.setItem('accessToken', '');
-//         console.log('fetchWithRefresh setItem accessToken empty');
-
-//         return Promise.reject(refreshError);
-//       }
-//     } else {
-//       return Promise.reject(err);
-//     }
-//   }
-// };
 
 type TIngredientsResponse = TServerResponse<{
   data: TIngredient[];
@@ -278,7 +197,6 @@ export const registerUserApi = (data: TRegisterData) =>
     .then((res) => checkResponse<TAuthResponse>(res))
     .then((data) => {
       if (data?.success) {
-        // Сохраняем токены
         localStorage.setItem('refreshToken', data.refreshToken);
         console.log('registerUserApi setItem refreshToken' + data.refreshToken);
 
@@ -307,7 +225,6 @@ export const loginUserApi = (data: TLoginData) =>
     .then((res) => checkResponse<TAuthResponse>(res))
     .then((data) => {
       if (data?.success) {
-        // Сохраняем токены
         localStorage.setItem('refreshToken', data.refreshToken);
         console.log('loginUserApi setItem refreshToken' + data.refreshToken);
 
