@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useSelector, useDispatch } from '../../services/store';
@@ -37,9 +37,16 @@ export const BurgerConstructor: FC = () => {
     dispatch(orderBurger(dataToOrder));
   };
 
+  // UPD PR1 - очистка на UX, а не по закрытию модалки заказа
+  useEffect(() => {
+    if (orderData) {
+      dispatch(clearConstructor());
+    }
+  }, [orderData, dispatch]);
+
   const closeOrderModal = () => {
     dispatch(clearOrder());
-    dispatch(clearConstructor());
+    //  dispatch(clearConstructor());
   };
 
   //Подсчет итоговой стоимости
