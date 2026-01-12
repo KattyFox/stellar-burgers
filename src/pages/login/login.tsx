@@ -2,7 +2,7 @@ import { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useDispatch } from '../../services/store';
 import { loginUser } from '../../services/slices/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
@@ -10,6 +10,7 @@ export const Login: FC = () => {
   const [errorText, setErrorText] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -18,6 +19,13 @@ export const Login: FC = () => {
     try {
       await dispatch(loginUser({ email, password })).unwrap();
       navigate('/', { replace: true });
+
+      // UPD (PR1) Получаем маршрут для возврата из состояния
+      const from = location.state?.from;
+      if (from) {
+        // UPD (PR1)Если есть сохраненный маршрут (защищенная навигация), перенаправляем на него, если нет - ничего не делаем
+        navigate(from, { replace: true });
+      }
     } catch (error: any) {
       setErrorText(error.message || 'Ошибка авторизации');
     }

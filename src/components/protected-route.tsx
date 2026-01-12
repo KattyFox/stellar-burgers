@@ -30,8 +30,8 @@ export const ProtectedRoute = ({
 
   // Роут только для авторизованных, а пользователь не авторизован
   if (!onlyUnAuth && !user) {
-    // Сохраняем текущий путь для возврата после авторизации
-    return <Navigate to='/login' state={{ from: location }} replace />;
+    // Сохраняем текущий путь для возврата после авторизации по маршруту, там где были до авторизации UPD (PR1) - добавила pathname
+    return <Navigate to='/login' state={{ from: location.pathname }} replace />;
   }
 
   return children;
