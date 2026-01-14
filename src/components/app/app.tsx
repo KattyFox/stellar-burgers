@@ -30,8 +30,11 @@ const App: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Состояние проверки авторизации
+  // UPD PR1
   const { isAuthChecked } = useSelector((state) => state.user);
+  const { loading: ingredientsLoading } = useSelector(
+    (state) => state.ingredients
+  );
 
   const background = location.state?.background;
 
@@ -44,12 +47,23 @@ const App: FC = () => {
 
   const handleModalClose = () => navigate(-1);
 
+  // UPD PR1
+  if (ingredientsLoading) {
+    return (
+      <div className={styles.app}>
+        <AppHeader />
+        <Preloader />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.app}>
       <AppHeader />
       <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
+
         {/* Защищенные роуты (только для НЕавторизованных) */}
         <Route
           path='/login'
@@ -101,6 +115,7 @@ const App: FC = () => {
             </ProtectedRoute>
           }
         />
+
         {/* Любая из траниц (зашли по прямой ссылке) */}
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='/feed/:number' element={<OrderInfo />} />
@@ -112,7 +127,6 @@ const App: FC = () => {
             </ProtectedRoute>
           }
         />
-
         <Route path='*' element={<NotFound404 />} />
       </Routes>
 
