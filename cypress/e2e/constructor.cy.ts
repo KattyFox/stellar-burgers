@@ -98,8 +98,8 @@ describe('Страница конструктора бургера', () => {
       cy.contains('Краторная булка N-200i').closest('a').click();
       cy.contains('Детали ингредиента').should('exist');
 
-      // Кликаем на оверлей - используем класс из CSS-модуля
-      cy.get('[class*="overlay"]').click({ force: true });
+      // Кликаем на оверлей (он может иметь другой класс)
+      cy.get('body').click(100, 100); // Клик в угол экрана
       cy.contains('Детали ингредиента').should('not.exist');
     });
 
