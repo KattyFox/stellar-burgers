@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 
-// Расширяем типы Cypress для наших кастомных команд
 declare namespace Cypress {
   interface Chainable {
     /**
@@ -14,33 +13,34 @@ declare namespace Cypress {
      * @example cy.clearMockTokens()
      */
     clearMockTokens(): Chainable<void>;
+
+    /**
+     * Добавляет ингредиент в конструктор по индексу
+     * @param index индекс ингредиента (0 - булка, 1 - начинка)
+     * @example cy.addIngredient(0)
+     */
+    addIngredient(index: number): Chainable<void>;
   }
 }
 
-// Команда для установки моковых токенов
 Cypress.Commands.add('setMockTokens', () => {
   cy.window().then((win) => {
-    // Устанавливаем в localStorage
-    win.localStorage.setItem('refreshToken', 'mock-refresh-token');
-    win.localStorage.setItem('accessToken', 'mock-access-token');
-
-    // Устанавливаем в cookie
-    cy.setCookie('accessToken', 'mock-access-token');
+    win.localStorage.setItem('refreshToken', 'testRefreshToken');
+    win.localStorage.setItem('accessToken', 'testAccessToken');
+    cy.setCookie('accessToken', 'testAccessToken');
   });
-
   cy.log('✅ Моковые токены установлены');
 });
 
-// Команда для очистки моковых токенов
 Cypress.Commands.add('clearMockTokens', () => {
   cy.window().then((win) => {
-    // Очищаем localStorage
     win.localStorage.removeItem('refreshToken');
     win.localStorage.removeItem('accessToken');
-
-    // Очищаем cookie
     cy.clearCookie('accessToken');
   });
-
   cy.log('✅ Моковые токены очищены');
+});
+
+Cypress.Commands.add('addIngredient', (index: number) => {
+  cy.get(`[data-cy=ingredient_${index}]`).find('button').click();
 });

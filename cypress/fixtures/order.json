@@ -1,16 +1,16 @@
 {
   "success": true,
-  "order": {
-    "_id": "order-123",
-    "number": 12345,
-    "status": "done",
-    "name": "Space Burger",
-    "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z",
-    "ingredients": [
-      "643d69a5c3f7b9001cfa093c",
-      "643d69a5c3f7b9001cfa0941"
-    ]
-  },
-  "name": "Space Burger"
+  "orders": [
+    {
+      "_id": "664fc0ee97ede0001d06c012",
+      "ingredients": ["643d69a5c3f7b9001cfa093e"],
+      "status": "done",
+      "name": "Люминесцентный бургер",
+      "createdAt": "2024-05-23T22:19:26.983Z",
+      "updatedAt": "2024-05-23T22:19:27.392Z",
+      "number": 40761
+    }
+  ],
+  "total": 40387,
+  "totalToday": 83
 }
