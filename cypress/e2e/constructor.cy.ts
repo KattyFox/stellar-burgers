@@ -89,7 +89,6 @@ describe('Страница конструктора бургера', () => {
       cy.contains('Детали ингредиента').should('exist');
 
       // Кликаем на крестик с force: true, так как он перекрыт оверлеем
-      // 👇 ДОБАВЬ ЭТО - закрываем модалку перед выходом
       cy.get('[class*="modal"]').find('button').click({ force: true });
       cy.contains('Детали ингредиента').should('not.exist');
     });
