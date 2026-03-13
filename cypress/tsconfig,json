@@ -1,11 +1,14 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "noEmit": true,
-    "types": ["cypress", "node"]
+    "target": "es5",
+    "lib": ["es5", "dom"],
+    "types": ["cypress", "node"],
+    "strict": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "module": "commonjs"
   },
-  "include": [
-    "../node_modules/cypress",
-    "./**/*.ts"
-  ]
+  "include": ["**/*.ts", "../node_modules/cypress/types"]
 }
