@@ -1,9 +1,25 @@
 // src/services/__tests__/rootReducer.test.ts
-import store from '../store';
+import { UnknownAction } from '@reduxjs/toolkit';
+import ingredientsSlice from '../slices/ingredientsSlice';
+import constructorSlice from '../slices/constructorSlice';
+import userSlice from '../slices/userSlice';
+import orderSlice from '../slices/orderSlice';
+import feedSlice from '../slices/feedSlice';
+import userOrdersSlice from '../slices/userOrdersSlice';
 
 describe('rootReducer', () => {
-  test('начальное состояние хранилища корректно', () => {
-    const state = store.getState();
+  test('вызов с undefined и неизвестным экшеном возвращает начальное состояние', () => {
+    const unknownAction: UnknownAction = { type: 'UNKNOWN_ACTION' };
+
+    // Используем .reducer у каждого слайса
+    const state = {
+      ingredients: ingredientsSlice.reducer(undefined, unknownAction),
+      burgerConstructor: constructorSlice.reducer(undefined, unknownAction),
+      user: userSlice.reducer(undefined, unknownAction),
+      order: orderSlice.reducer(undefined, unknownAction),
+      feed: feedSlice.reducer(undefined, unknownAction),
+      userOrders: userOrdersSlice.reducer(undefined, unknownAction)
+    };
 
     expect(state).toEqual({
       ingredients: {
