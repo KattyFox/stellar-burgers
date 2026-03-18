@@ -3,7 +3,8 @@ import constructorSlice, {
   addIngredient,
   removeIngredient,
   moveIngredient,
-  clearConstructor
+  clearConstructor,
+  initialState
 } from '../slices/constructorSlice';
 import { TIngredient, TConstructorIngredient } from '@utils-types';
 
@@ -13,11 +14,6 @@ jest.mock('uuid', () => ({
 }));
 
 describe('constructorSlice', () => {
-  const initialState = {
-    bun: null,
-    ingredients: []
-  };
-
   const mockBun: TIngredient = {
     _id: 'bun-1',
     name: 'Краторная булка',
@@ -104,7 +100,7 @@ describe('constructorSlice', () => {
       id: 'test-id-1'
     };
     const stateWithIngredient = {
-      bun: null,
+      ...initialState,
       ingredients: [ingredientWithId]
     };
 
@@ -121,7 +117,7 @@ describe('constructorSlice', () => {
     const ing3: TConstructorIngredient = { ...mockMain, id: '3' };
 
     const stateWithIngredients = {
-      bun: null,
+      ...initialState,
       ingredients: [ing1, ing2, ing3]
     };
 
@@ -138,7 +134,7 @@ describe('constructorSlice', () => {
     const ing3: TConstructorIngredient = { ...mockMain, id: '3' };
 
     const stateWithIngredients = {
-      bun: null,
+      ...initialState,
       ingredients: [ing1, ing2, ing3]
     };
 
