@@ -1,3 +1,4 @@
+// src/services/slices/constructorSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TIngredient, TConstructorIngredient } from '@utils-types';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,14 +8,14 @@ interface IConstructorState {
   ingredients: TConstructorIngredient[];
 }
 
-const initialState: IConstructorState = {
+export const initialState: IConstructorState = {
   bun: null,
   ingredients: []
 };
 
 const constructorSlice = createSlice({
   name: 'burgerConstructor',
-  initialState,
+  initialState, // export
   reducers: {
     addIngredient: {
       reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
@@ -28,13 +29,11 @@ const constructorSlice = createSlice({
         payload: { ...ingredient, id: uuidv4() }
       })
     },
-
     removeIngredient: (state, action: PayloadAction<string>) => {
       state.ingredients = state.ingredients.filter(
         (item) => item.id !== action.payload
       );
     },
-
     moveIngredient: (
       state,
       action: PayloadAction<{ from: number; to: number }>
@@ -43,12 +42,10 @@ const constructorSlice = createSlice({
       const [movedItem] = state.ingredients.splice(from, 1);
       state.ingredients.splice(to, 0, movedItem);
     },
-
     clearConstructor: (state) => {
       state.bun = null;
       state.ingredients = [];
     },
-
     updateIngredients: (
       state,
       action: PayloadAction<TConstructorIngredient[]>
@@ -58,7 +55,6 @@ const constructorSlice = createSlice({
   }
 });
 
-// Экспортируем все actions
 export const {
   addIngredient,
   removeIngredient,
